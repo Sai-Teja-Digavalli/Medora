@@ -1,2 +1,3 @@
 # Medora
-Medora is a AI Health Companion that can detect user diseases based on user sympotoms.
+Overview of the project: 
+  The AI-Based Smart Disease Symptom Checker is an intelligent system developed to assist users in performing early self-assessment by predicting potential diseases based on their reported symptoms. It utilizes Natural Language Processing (NLP) techniques and a Bi-directional LSTM (BiLSTM) deep learning model to interpret medical symptom descriptions and generate accurate predictions. Instead of relying on heavy transformer architectures like BioBERT, this project adopts a lightweight and efficient BiLSTM approach, making it well-suited for deployment in low-resource or mobile environments. The application is not intended to replace medical professionals; rather, it supports the healthcare ecosystem by reducing unnecessary load and providing users with timely preliminary guidance.
