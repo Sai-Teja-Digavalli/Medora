@@ -1,0 +1,10 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Welcome to Medora, {{ name }}!</h2>
+<p>Your patient account has been successfully created. We are excited to have you on board.</p>
+<p>With Medora, you can get AI-driven preliminary disease predictions and seamlessly book appointments with nearby hospitals based on their expertise.</p>
+<center>
+    <a href="http://127.0.0.1:5000/login" class="btn">Login to Your Dashboard</a>
+</center>
+{% endblock %}

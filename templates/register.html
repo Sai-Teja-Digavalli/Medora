@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medora | Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00b4d8;
+            --secondary-color: #0077b6;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); margin: 0; min-height: 100vh; }
+        .navbar { background: linear-gradient(to right, var(--secondary-color), var(--primary-color)); padding: 1rem 2rem; color: white; display: flex; justify-content: space-between; align-items: center;}
+        .navbar .logo { font-size: 1.5rem; font-weight: 600; }
+        .navbar-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; }
+        .container { max-width: 500px; margin: 60px auto; background: white; padding: 40px; border-radius: 20px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary-color); }
+        h2 { text-align: center; color: var(--secondary-color); margin-bottom: 20px; }
+        form { display: flex; flex-direction: column; gap: 15px; }
+        input, select { padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-family: 'Poppins', sans-serif;}
+        button { padding: 15px; background: var(--secondary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        button:hover { background: var(--primary-color); }
+        .flash { padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;}
+        .flash.success { background: #d4edda; color: #155724; }
+        .flash.danger { background: #f8d7da; color: #721c24; }
+        .flash.warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Medora</div>
+        <div class="navbar-links"><a href="/">Home</a><a href="/login">Login</a></div>
+    </nav>
+    <div class="container">
+        <h2>Register</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+            <select name="role" id="role-select" required>
+                <option value="patient">I am a Patient</option>
+                <option value="hospital">I am a Hospital / Clinic</option>
+            </select>
+            <input type="text" name="name" placeholder="Full Name or Hospital Name" required>
+            <input type="email" name="email" placeholder="Email (must be @gmail.com)" pattern=".*@gmail\.com$" title="Only @gmail.com emails are allowed" required>
+            
+            <div id="personal-details" style="display: flex; gap: 10px;">
+                <input type="number" name="age" id="age-input" placeholder="Age" min="18" style="flex: 1;" title="Age (Must be at least 18)" required>
+                <select name="gender" id="gender-select" style="flex: 2;" title="Gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+            </div>
+
+            <input type="text" name="zipcode" placeholder="Zip Code" required>
+            <input type="password" name="password" placeholder="Password" pattern="(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+" title="Must contain at least one uppercase letter, one number, and one special character" required>
+            
+            <div style="font-size: 0.9em; display: flex; align-items: start; gap: 10px; text-align: left;">
+                <input type="checkbox" name="terms" required style="width: auto; margin-top: 5px;">
+                <label>I have read and agree to the Terms and Conditions.<br>
+                <small style="color: #666;"><strong>Disclaimer:</strong> Medora is an AI-powered diagnostic tool currently in its testing phase. Its analyses may not be fully accurate and must not replace professional medical advice. Always consult a certified doctor before making health decisions.</small></label>
+            </div>
+
+            <button type="submit">Sign Up</button>
+
+        </form>
+        <p style="text-align: center; margin-top:20px;">Already have an account? <a href="/login">Login</a></p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtns = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+                    submitBtns.forEach(btn => {
+                        btn.disabled = true;
+                        btn.innerHTML = 'Processing...';
+                        btn.style.opacity = '0.7';
+                        btn.style.cursor = 'not-allowed';
+                    });
+                });
+            });
+
+            const roleSelect = document.getElementById('role-select');
+            const personalDetails = document.getElementById('personal-details');
+            const ageInput = document.getElementById('age-input');
+            const genderSelect = document.getElementById('gender-select');
+            
+            roleSelect.addEventListener('change', function() {
+                if (this.value === 'hospital') {
+                    personalDetails.style.display = 'none';
+                    ageInput.removeAttribute('required');
+                    genderSelect.removeAttribute('required');
+                } else {
+                    personalDetails.style.display = 'flex';
+                    ageInput.setAttribute('required', 'required');
+                    genderSelect.setAttribute('required', 'required');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

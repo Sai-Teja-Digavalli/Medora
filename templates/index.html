@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medora | Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 for popups -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary-color: #00b4d8;
+            --secondary-color: #0077b6;
+            --accent-color: #90e0ef;
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --success-color: #2a9d8f;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            padding: 1rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .navbar-links a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.8s ease-out;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
+        }
+
+        button {
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f0faff;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-color);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        .result-title {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .prediction-value {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        .confidence-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .confidence-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+
+        .confidence-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flash {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .flash.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .flash.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .flash.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .btn-book {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .btn-book:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">Medora</div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="/first-aid">First Aid</a>
+            {% if current_user.is_authenticated %}
+                <a href="/patient_dashboard">Dashboard</a>
+                <a href="/profile">My Profile</a>
+                <a href="/logout">Logout ({{ current_user.name }})</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Disease Prediction</h2>
+        <p class="subtitle">Enter your symptoms below to get an AI-powered health assessment.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/predict">
+            <textarea name="symptoms" placeholder="e.g., I have a headache, fever, and shivering..."
+                required>{{ symptoms if symptoms else '' }}</textarea>
+            <button type="submit">Analyze Symptoms</button>
+        </form>
+
+        {% if prediction and prediction != "Unknown" %}
+        <div class="result-box">
+            <span class="result-title">Analysis Result</span>
+            <div class="prediction-value">
+                Based on your symptoms, it could be: <span style="color: var(--secondary-color);">{{ prediction
+                    }}</span>
+            </div>
+
+            <div class="confidence-bar-container">
+                <div class="confidence-bar" style="width: {{ confidence }}%"></div>
+            </div>
+            <div class="confidence-text">Confidence: {{ confidence | round(2) }}%</div>
+
+            {% if current_user.is_authenticated %}
+            <a href="/hospitals?prediction={{ prediction | urlencode }}&confidence={{ confidence }}&symptoms={{ symptoms | urlencode }}"
+                class="btn-book">Book an Appointment Nearby</a>
+            {% else %}
+            <p style="margin-top:15px; font-size: 0.9rem; color: #d9534f;">Please <a href="/login">Login</a> to book a
+                hospital appointment.</p>
+            {% endif %}
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var conf = Number("{{ confidence }}");
+                var pred = "{{ prediction }}";
+                var redirectUrl = "{% if current_user.is_authenticated %}/hospitals?prediction={{ prediction | urlencode }}&confidence={{ confidence }}&symptoms={{ symptoms | urlencode }}{% else %}/login{% endif %}";
+
+                if (conf > 80) {
+                    Swal.fire({
+                        title: 'High Confidence Alert!',
+                        text: 'Consult a doctor immediately based on these predictions (' + pred + ').',
+                        icon: 'warning',
+                        confirmButtonText: 'View Hospitals'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location = redirectUrl;
+                        }
+                    });
+                } else if (conf < 25) {
+                    Swal.fire({
+                        title: 'Low Confidence Alert',
+                        text: 'The AI is unsure. We highly recommend consulting a doctor for an accurate diagnosis.',
+                        icon: 'info',
+                        confirmButtonText: 'View Hospitals'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location = redirectUrl;
+                        }
+                    });
+                }
+            });
+        </script>
+        {% endif %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function() {
+                        const submitBtns = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+                        submitBtns.forEach(btn => {
+                            btn.disabled = true;
+                            btn.innerHTML = 'Processing...';
+                            btn.style.opacity = '0.7';
+                            btn.style.cursor = 'not-allowed';
+                        });
+                    });
+                });
+            });
+        </script>
+    </div>
+
+</body>
+
+</html>

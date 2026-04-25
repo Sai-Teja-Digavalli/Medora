@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Flask instance folder (contains local database)
+instance/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environment (if any)
+venv/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+
+# Large model files (Optional: uncomment if you don't want to track them in git)
+# disease_prediction_model.h5
+# disease_prediction_model.keras
+# preprocessing.pkl
+# Symptom2Disease.csv

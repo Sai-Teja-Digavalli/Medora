@@ -1,0 +1,24 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Appointment Status Update</h2>
+<p>Hello {{ appointment.patient.name }},</p>
+
+{% if status == 'Accepted' %}
+    <p>Good news! Your appointment request at <strong>{{ appointment.hospital.name }}</strong> has been <strong style="color: #28a745;">ACCEPTED</strong>.</p>
+{% else %}
+    <p>We're sorry to inform you that your appointment request at <strong>{{ appointment.hospital.name }}</strong> has been <strong style="color: #dc3545;">REJECTED</strong>. This is usually due to doctors being fully booked.</p>
+{% endif %}
+
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <p style="margin: 0 0 10px 0;"><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+    <p style="margin: 0;"><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+</div>
+
+{% if status == 'Accepted' %}
+    <center>
+        <a href="{{ get_gcal_url(appointment) }}" class="btn" style="background-color: #28a745;">Add to Google Calendar</a>
+    </center>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>New Appointment Request</h2>
+<p>You have received a new appointment request from <strong>{{ patient.name }}</strong>.</p>
+
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #00b4d8;">
+    <p style="margin: 0 0 10px 0;"><strong>Predicted Disease Need:</strong> {{ prediction }}</p>
+    <p style="margin: 0 0 10px 0;"><strong>Requested Date:</strong> {{ appt_date }}</p>
+    <p style="margin: 0 0 10px 0;"><strong>Requested Time:</strong> {{ appt_time }}</p>
+    <p style="margin: 0;"><strong>Patient Symptoms reported:</strong> <em>{{ symptoms }}</em></p>
+</div>
+
+<p>Please log in to your dashboard to Accept or Reject this appointment request.</p>
+<center>
+    <a href="http://127.0.0.1:5000/login" class="btn">Review Request</a>
+</center>
+{% endblock %}

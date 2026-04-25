@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medora | Super Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00b4d8;
+            --secondary-color: #0077b6;
+            --danger-color: #ef476f;
+            --success-color: #06d6a0;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); margin: 0; min-height: 100vh; }
+        .navbar { background: linear-gradient(to right, var(--secondary-color), var(--primary-color)); padding: 1rem 2rem; color: white; display: flex; justify-content: space-between; align-items: center;}
+        .navbar .logo { font-size: 1.5rem; font-weight: 600; }
+        .navbar-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; }
+        .container { max-width: 1000px; margin: 40px auto; display: flex; flex-direction: column; gap: 30px;}
+        .section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { color: var(--secondary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; color: var(--secondary-color); }
+        .btn { padding: 8px 12px; color: white; border: none; border-radius: 5px; text-decoration: none; font-size: 0.9em; cursor: pointer; }
+        .btn-success { background: var(--success-color); }
+        .btn-danger { background: var(--danger-color); }
+        .flashes { list-style: none; padding: 0; }
+        .flashes li { padding: 10px; margin-bottom: 10px; border-radius: 5px; color: white; }
+        .flashes .success { background: var(--success-color); }
+        .flashes .danger { background: var(--danger-color); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Medora Admin</div>
+        <div class="navbar-links"><a href="/logout">Logout</a></div>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <div class="section">
+            <h2>Pending Hospital Registrations</h2>
+            {% if pending_hospitals %}
+            <table>
+                <tr><th>Name</th><th>Email</th><th>ZipCode</th><th>Actions</th></tr>
+                {% for hosp in pending_hospitals %}
+                <tr>
+                    <td>{{ hosp.name }}</td><td>{{ hosp.email }}</td><td>{{ hosp.zipcode }}</td>
+                    <td>
+                        <a href="/manage_hospital/{{ hosp.id }}/approve" class="btn btn-success">Approve</a>
+                        <a href="/manage_hospital/{{ hosp.id }}/reject" class="btn btn-danger">Reject</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No pending registrations.</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>Platform Analytics (Recent Searches)</h2>
+            <div style="max-height: 300px; overflow-y: auto;">
+                <table>
+                    <tr><th>Date</th><th>Prediction</th><th>Symptoms Searched</th></tr>
+                    {% for search in searches|reverse %}
+                    <tr>
+                        <td>{{ search.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td><strong>{{ search.predicted_disease }}</strong></td>
+                        <td style="font-size: 0.8em; color: #555;">{{ search.symptoms }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% if not searches %}<p>No search data yet.</p>{% endif %}
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Manage Active Users</h2>
+            <div style="max-height: 400px; overflow-y: auto;">
+            <table>
+                <tr><th>Role</th><th>Name</th><th>Email</th><th>ZipCode</th></tr>
+                {% for u in users %}
+                <tr>
+                    <td>
+                        {% if u.role == 'hospital' %}
+                            <span style="background: var(--primary-color); color: white; padding: 3px 8px; border-radius: 10px; font-size: 0.8em;">Hospital</span>
+                        {% else %}
+                            <span style="background: #ccc; color: black; padding: 3px 8px; border-radius: 10px; font-size: 0.8em;">Patient</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.zipcode }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

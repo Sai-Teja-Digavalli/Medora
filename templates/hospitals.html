@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medora | Nearby Hospitals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00b4d8;
+            --secondary-color: #0077b6;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-gradient); margin: 0; min-height: 100vh; }
+        .navbar { background: linear-gradient(to right, var(--secondary-color), var(--primary-color)); padding: 1rem 2rem; color: white; display: flex; justify-content: space-between; align-items: center;}
+        .navbar .logo { font-size: 1.5rem; font-weight: 600; }
+        .navbar-links a { color: white; margin-left: 20px; text-decoration: none; font-weight: 500; }
+        .container { max-width: 800px; margin: 60px auto; }
+        .hospital-card { background: white; padding: 20px; border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 20px; border-left: 5px solid var(--primary-color); display: flex; justify-content: space-between; align-items: center; }
+        .hospital-info h3 { margin: 0; color: var(--secondary-color); }
+        .hospital-info p { margin: 5px 0 0 0; color: #666; font-size: 0.9rem; }
+        button { padding: 10px 20px; background: var(--secondary-color); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        button:hover { background: var(--primary-color); }
+        .flash { padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;}
+        .flash.success { background: #d4edda; color: #155724; }
+        .flash.danger { background: #f8d7da; color: #721c24; }
+        .flash.warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Medora</div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="/patient_dashboard">Dashboard</a>
+            <a href="/profile">My Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 style="color: var(--secondary-color);">Hospitals near {{ current_user.zipcode }}</h2>
+        <p>Booking an appointment for: <strong>{{ prediction }}</strong> (Confidence: {{ confidence }}%)</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        {% if hospitals %}
+            {% for hospital in hospitals %}
+            <div class="hospital-card">
+                <div class="hospital-info">
+                    <h3>{{ hospital.name }}</h3>
+                    <p>Email: {{ hospital.email }} | Zip Code: {{ hospital.zipcode }}</p>
+                </div>
+                <form action="/book_appointment/{{ hospital.id }}" method="POST" style="display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
+                    <div style="display:flex; gap:10px;">
+                        <input type="date" name="appointment_date" required min="{{ range_start }}" title="Select Date" style="padding:5px; border-radius:5px; border:1px solid #ccc;">
+                        <input type="time" name="appointment_time" required min="{{ hospital.working_hours_start }}" max="{{ hospital.working_hours_end }}" title="Working Hours: {{ hospital.working_hours_start }} - {{ hospital.working_hours_end }}" style="padding:5px; border-radius:5px; border:1px solid #ccc;">
+                    </div>
+                    <div style="font-size:0.8rem; color:#666;">Hours: {{ hospital.working_hours_start }} to {{ hospital.working_hours_end }}</div>
+                    <input type="hidden" name="prediction" value="{{ prediction }}">
+                    <input type="hidden" name="confidence" value="{{ confidence }}">
+                    <input type="hidden" name="symptoms" value="{{ symptoms }}">
+                    <button type="submit">Book Appointment</button>
+                </form>
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hospitals found in your Zip Code ({{ current_user.zipcode }}).</p>
+        {% endif %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtns = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+                    submitBtns.forEach(btn => {
+                        btn.disabled = true;
+                        btn.innerHTML = 'Processing...';
+                        btn.style.opacity = '0.7';
+                        btn.style.cursor = 'not-allowed';
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

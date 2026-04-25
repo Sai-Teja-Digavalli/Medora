@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medora | First Aid Assistant</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for visual icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #00b4d8;
+            --secondary-color: #0077b6;
+            --accent-color: #90e0ef;
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            padding: 1rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+        }
+
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .navbar-links a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .navbar-links a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            animation: fadeIn 0.8s ease-out;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        /* LAYOUT GRID */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        /* LEFT SIDE - SELECTION */
+        .selection-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+            height: fit-content;
+        }
+
+        .condition-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: #555;
+            text-align: left;
+        }
+
+        .condition-btn i {
+            margin-right: 10px;
+            width: 20px;
+            color: var(--secondary-color);
+        }
+
+        .condition-btn:hover {
+            transform: translateX(5px);
+            border-color: var(--primary-color);
+            background: #f0faff;
+        }
+
+        .condition-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 6px rgba(0, 119, 182, 0.2);
+        }
+
+        .condition-btn.active i {
+            color: white;
+        }
+
+        /* RIGHT SIDE - CONTENT */
+        .info-panel {
+            min-height: 400px;
+        }
+
+        .info-card {
+            background: #fff;
+            padding: 10px;
+            animation: fadeIn 0.5s ease-out;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .info-card.visible {
+            display: block;
+        }
+
+        .visual-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .visual-icon-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 35px;
+            box-shadow: 0 8px 16px rgba(0, 180, 216, 0.2);
+        }
+
+        .visual-header h3 {
+            margin: 0;
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+        }
+
+        .section-title {
+            color: #d62828;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+        }
+
+        .section-title.action {
+            color: #2a9d8f;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            margin-top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .selection-panel {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 10px;
+                display: flex;
+                gap: 10px;
+            }
+
+            .condition-btn {
+                width: auto;
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">Medora</div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="/first-aid">First Aid</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>First Aid Guide</h2>
+        <p style="text-align:center; color:#777; margin-bottom: 2rem;">Select a condition to view immediate first aid
+            steps.</p>
+
+        <div class="content-grid">
+            <!-- Navigation List -->
+            <div class="selection-panel" id="menu-list">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Content Area -->
+            <div class="info-panel" id="content-area">
+                <div class="empty-state">
+                    <i class="fas fa-user-md"></i>
+                    <p>Select a topic from the menu to see details.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firstAidData = {
+            burn: {
+                title: "Burn Injury",
+                icon: "fa-fire",
+                actions: [
+                    "Immediately cool the burn under cold running water for at least 10-20 minutes.",
+                    "Remove tight items (rings, watches) from the area before swelling starts.",
+                    "Cover the burn loosely with a sterile, non-stick bandage or clean cloth.",
+                    "Take pain relief if needed (e.g., ibuprofen)."
+                ],
+                warnings: [
+                    "Do NOT use ice, iced water, or greasy substances (butter, toothpaste).",
+                    "Do NOT break any blisters that form.",
+                    "Do NOT remove clothing stuck to the burnt skin."
+                ]
+            },
+            cut: {
+                title: "Cuts & Bleeding",
+                icon: "fa-tint",
+                actions: [
+                    "Apply direct pressure on the wound with a clean cloth to stop bleeding.",
+                    "Clean the wound gently with cool water once bleeding stops.",
+                    "Apply an antiseptic lotion or cream.",
+                    "Cover with a sterile bandage or dressing."
+                ],
+                warnings: [
+                    "Do NOT scrub the wound directly if it has dirt embedded.",
+                    "Do NOT remove large objects stuck in the wound; seek professional help."
+                ]
+            },
+            fracture: {
+                title: "Fractures",
+                icon: "fa-bone",
+                actions: [
+                    "Keep the patient still and calm.",
+                    "Immobilize the injured area using a splint or sling.",
+                    "Apply ice packs wrapped in a cloth to reduce swelling (15 mins at a time).",
+                    "Elevate the limb if possible to reduce swelling."
+                ],
+                warnings: [
+                    "Do NOT try to massage the area.",
+                    "Do NOT try to realign the bone or push a protruding bone back in."
+                ]
+            },
+            snake: {
+                title: "Snake Bite",
+                icon: "fa-staff-snake",
+                actions: [
+                    "Keep the patient as still and calm as possible to slow venom spread.",
+                    "Position the bite area below the level of the heart.",
+                    "Remove jewelry or tight clothing near the bite.",
+                    "Transport to a hospital IMMEDIATELY."
+                ],
+                warnings: [
+                    "Do NOT cut the wound or try to suck out the venom.",
+                    "Do NOT apply a tourniquet or ice.",
+                    "Do NOT give alcohol or caffeine."
+                ]
+            },
+            choking: {
+                title: "Choking",
+                icon: "fa-hand-holding-medical",
+                actions: [
+                    "Perform the Heimlich maneuver: Stand behind person, wrap arms around waist.",
+                    "Make a fist above the navel, grasp with other hand.",
+                    "Thrust inward and upward forcefully.",
+                    "Repeat 5 times or until object is dislodged."
+                ],
+                warnings: [
+                    "If person becomes unconscious, begin CPR.",
+                    "Do NOT intervene if the person is coughing forcefully (encourage them)."
+                ]
+            },
+            heatstroke: {
+                title: "Heat Stroke",
+                icon: "fa-temperature-high",
+                actions: [
+                    "Move person to a cool, shaded area immediately.",
+                    "Cool them down: Apply cool water to skin, fan them, place ice packs in armpits/groin.",
+                    "Give cool water to drink ONLY if they are conscious and able to swallow."
+                ],
+                warnings: [
+                    "Do NOT give fever medication (aspirin/acetaminophen).",
+                    "Seek medical help immediately if confusion or unconsciousness occurs."
+                ]
+            },
+            nosebleed: {
+                title: "Nosebleed",
+                icon: "fa-notes-medical",
+                actions: [
+                    "Sit upright and lean forward slightly (to prevent swallowing blood).",
+                    "Pinch the soft part of the nose (just below the bony bridge) for 10-15 minutes.",
+                    "Breathe through the mouth.",
+                    "Apply a cold compress to the bridge of the nose."
+                ],
+                warnings: [
+                    "Do NOT lean back or lie down.",
+                    "Do NOT pick or blow the nose immediately after bleeding stops."
+                ]
+            },
+            fainting: {
+                title: "Fainting",
+                icon: "fa-user-injured",
+                actions: [
+                    "Lay the person flat on their back.",
+                    "Elevate legs slightly (about 12 inches) to restore blood flow to the brain.",
+                    "Loosen tight clothing (belts, collars).",
+                    "Check for breathing; call for help if not breathing."
+                ],
+                warnings: [
+                    "Do NOT splash water violently on their face.",
+                    "Do NOT give them food or drink until fully recovered."
+                ]
+            },
+            sprain: {
+                title: "Sprains & Strains",
+                icon: "fa-walking",
+                actions: [
+                    "R.I.C.E method: Rest, Ice, Compression, Elevation.",
+                    "Rest the injured limb.",
+                    "Ice for 20 minutes every 2-3 hours.",
+                    "Compress with a bandage (not too tight).",
+                    "Elevate the injury above heart level."
+                ],
+                warnings: [
+                    "Do NOT apply heat in the first 48 hours.",
+                    "Do NOT trying to 'walk it off' immediately."
+                ]
+            },
+            insect: {
+                title: "Insect Sting",
+                icon: "fa-bug",
+                actions: [
+                    "Remove the stinger if visible (scrape it out with a card, don't squeeze).",
+                    "Wash the area with soap and water.",
+                    "Apply a cold pack to reduce swelling.",
+                    "Apply hydrocortisone cream or take an antihistamine."
+                ],
+                warnings: [
+                    "Watch for allergic reactions (swelling of face/lips, difficulty breathing).",
+                    "Seek emergency help immediately if anaphylaxis is suspected."
+                ]
+            }
+        };
+
+        const menuList = document.getElementById('menu-list');
+        const contentArea = document.getElementById('content-area');
+
+        // Initialize Menu
+        for (const [key, data] of Object.entries(firstAidData)) {
+            const btn = document.createElement('button');
+            btn.className = 'condition-btn';
+            btn.innerHTML = `<i class="fas ${data.icon}"></i> ${data.title}`;
+            btn.onclick = () => selectCondition(key, btn);
+            menuList.appendChild(btn);
+        }
+
+        function selectCondition(key, btnElement) {
+            // Update Menu Active State
+            document.querySelectorAll('.condition-btn').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const data = firstAidData[key];
+
+            // Update Content Area
+            contentArea.innerHTML = `
+                <div class="info-card visible">
+                    <div class="visual-header">
+                        <div class="visual-icon-circle">
+                            <i class="fas ${data.icon}"></i>
+                        </div>
+                        <h3>${data.title}</h3>
+                    </div>
+                    
+                    <span class="section-title action"><i class="fas fa-check-circle"></i> Immediate Actions</span>
+                    <ul>
+                        ${data.actions.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+
+                    <span class="section-title"><i class="fas fa-exclamation-triangle"></i> What NOT to do</span>
+                    <ul>
+                        ${data.warnings.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+
+</html>
