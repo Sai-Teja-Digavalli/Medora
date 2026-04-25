@@ -47,4 +47,33 @@ Medora is an AI-powered healthcare web application that predicts diseases based 
 
 ---
 
-## 🏗️ System Architecture
+
+---
+
+## 🛠️ Tech Stack
+
+### 🔹 Backend
+- Python
+- Flask
+- Flask-Login
+- Flask-Mail
+- SQLAlchemy
+
+### 🔹 Frontend
+- HTML
+- CSS
+- Bootstrap
+
+### 🔹 Machine Learning
+- TensorFlow / Keras
+- NumPy
+- Pandas
+- Scikit-learn
+
+### 🔹 Database
+- SQLite
+
+---
+
+
+
