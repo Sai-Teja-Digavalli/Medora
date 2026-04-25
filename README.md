@@ -1,3 +1,50 @@
-# Medora
-Overview of the project: 
-  The AI-Based Smart Disease Symptom Checker is an intelligent system developed to assist users in performing early self-assessment by predicting potential diseases based on their reported symptoms. It utilizes Natural Language Processing (NLP) techniques and a Bi-directional LSTM (BiLSTM) deep learning model to interpret medical symptom descriptions and generate accurate predictions. Instead of relying on heavy transformer architectures like BioBERT, this project adopts a lightweight and efficient BiLSTM approach, making it well-suited for deployment in low-resource or mobile environments. The application is not intended to replace medical professionals; rather, it supports the healthcare ecosystem by reducing unnecessary load and providing users with timely preliminary guidance.
+# 🏥 Medora — AI-Based Healthcare Assistant & Appointment System
+
+Medora is an AI-powered healthcare web application that predicts diseases based on user symptoms and integrates this functionality with a complete appointment booking and hospital management system.
+
+---
+
+## 🚀 Features
+
+- 🧠 AI-based Disease Prediction (Bi-LSTM with Attention)
+- 📝 Symptom-based input (natural language)
+- 🏥 Patient–Hospital Appointment System
+- 📧 Email Notifications (appointment updates)
+- 🔐 Secure User Authentication (Login/Register)
+- 📊 Search History Tracking
+- 🖥️ Role-based Dashboards (Patient, Hospital, Admin)
+
+---
+
+## 🧠 Deep Learning Model
+
+- Model Type: **Bi-LSTM (Bidirectional LSTM)**
+- Enhancement: **Attention Mechanism**
+- Dataset: **Symptom2Disease**
+- Output:
+  - Predicted Disease
+  - Confidence Score
+
+### Why Bi-LSTM + Attention?
+- Captures context from both directions
+- Focuses on important symptoms
+- Improves prediction accuracy
+
+---
+
+## 📊 Dataset
+
+- Name: **Symptom2Disease Dataset**
+- Type: Supervised Learning
+- Structure:
+  - Input: Symptom descriptions (text)
+  - Output: Disease labels
+
+### Limitations:
+- Limited dataset size
+- No real clinical validation
+- Only text-based features
+
+---
+
+## 🏗️ System Architecture
